@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      ::-webkit-scrollbar-track
+        {
+          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+          background-color: #F5F5F5;
+        }
+
+        ::-webkit-scrollbar
+        {
+          width: 10px;
+          /* background-color: #F5F5F5; */
+        }
+
+        ::-webkit-scrollbar-thumb
+        {
+          background-color: #0ae;
+          
+          background-image: -webkit-gradient(linear, 0 0, 0 100%,
+                            color-stop(.5, rgba(255, 255, 255, .2)),
+                    color-stop(.5, transparent), to(transparent));
+        }
+
+
+    </style>
+    <title>Translate App</title>
+  </head>
+  <body>
+    <section class="hero-section">
+      <div>
+        <h2 class="hero-head" style="color: white;">Codeyoung - Translate App</h2>
+      <small style="color: white;" class="hero-subhead"
+        >A translation app made by using Google Translation API</small
+      >
+      </div>
+    </section>
+    <section class="form-section">
+      <form action="">
+        <!-- <h3 class="form-head">Enter the text to be Translated:</h3> -->
+        <div class="form-field-container">
+          <label for="translateText" class="label-text">
+          <span class="label-content">Text to be Translated</span>
+          </label>
+          
+          <input
+            type="text"
+            name="translateText"
+            id="translateText"
+            autocomplete="off"
+            required
+          />
+        
+        </div>
+
+        <div class="lang-select-container">
+          <div class="form-field-container">
+          <label for="translateText" class="label-text">
+            <span class="label-content">Source Language</span>
+          </label>
+          
+          <select name="sourceLang" id="sourceLang" class = "select-input">
+            <% for(let i=0; i<languages.length; i++) { %>
+            <option value="<%= languages[i].code %>"><%= languages[i].name %></option>
+          <% } %>  
+          </select>
+        </div>
+     
+      
+      <div class="form-field-container">
+        <label for="translateText" class="label-text">
+          <span class="label-content">Target Language</span>
+        </label>
+        
+        <select name="targetLang" id="targetLang" class = "select-input">
+          <% for(let i=0; i<languages.length; i++) { %>
+          <option value="<%= languages[i].code %>"><%= languages[i].name %></option>
+        <% } %>  
+        </select>
+      </div>
+        </div>
+      
+      <input type="submit" class = "submit-btn" value="Submit" /> 
+      </form>
+    </section>
+
+    <section class="results-section">
+      <div class="results">
+        <p style="font-weight: 600;">Translated Text</p>
+        <div>
+          <p class="loading-container"></p>
+        <p class="input-lang"></p>
+        </div>
+      </div>
+    </section>
+    
+  </body>
+
+  <script>
+    const form = document.querySelector("form");
+    const results = document.querySelector(".results");
+    const inputLang = document.querySelector(".input-lang");
+    const loadContainer = document.querySelector(".loading-container");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      loadContainer.textContent = `Loading...`;
+      inputLang.textContent = ``;
+      const text = form.translateText.value;
+      const sourcelang = form.sourceLang.value;
+      const targetlang = form.targetLang.value;
+      if(sourcelang===targetlang)
+      {
+        loadContainer.textContent = ``;
+        inputLang.textContent = "Source Language and Target Language must be different."
+      }
+      else
+      {
+        fetch(
+        "/translate?translateText=" +
+          text +
+          "&sourceLang=" +
+          sourcelang +
+          "&targetLang=" +
+          targetlang
+      ).then((response) => {
+        response.json().then((results) => {
+          // console.log(results);
+          loadContainer.textContent = ``;
+          inputLang.textContent = `${results.translatedText}`;
+        });
+      });
+      }
+      // console.log(language)
+      
+    });
+  </script>
+</html>
