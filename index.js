@@ -40,7 +40,6 @@ app.get("/translate", async (req, res) => {
   const targetLang = req.query.targetLang;
   // console.log(translateLang);
   try {
-    const lang = await detectLanguage(inputText);
     const translatedText = await translateText(
       inputText,
       sourceLang,
